@@ -4,10 +4,11 @@ var path = require('path');
 var basename = path.basename(__filename);
 let config = require('.././config');
 var db = {};
-const sequelize = new Sequelize('ecommerce', 'root', 'root', {
-    host: 'localhost',
-    dialect: 'mysql',
-    port: 3306,
+
+const sequelize = new Sequelize(config.db.database, config.db.username, config.db.password, {
+    host: config.db.host,
+    dialect: config.db.databaseUsed,
+    port: config.db.port,
     pool: {
         max: 5,
         min: 0,

@@ -6,6 +6,8 @@ const db={
     password:process.env.DB_PASS,
     port:process.env.DB_PORT,
     database:process.env.DB_NAME,
+    databasePort:process.env.DB_PORT,
+    databaseUsed:process.env.DB_TYPE
 
 }
 module.exports={
