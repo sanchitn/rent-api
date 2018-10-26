@@ -7,7 +7,7 @@ module.exports={
             model.users.findOne({where:cond}).then(data => {
                     
                         
-                        resolve(data)
+                resolve(data)
                    
             }).catch(err=>{
 

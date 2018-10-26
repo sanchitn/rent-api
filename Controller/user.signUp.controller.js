@@ -4,7 +4,8 @@ var stateHelper = require('.././Helpers/states.helper');
 var cityHelper = require('.././Helpers/cities.helper');
 var userHelper = require('.././Helpers/user.helper');
 var mailHelper = require('.././Helpers/mailer.helper');
-var phoneLib=require('.././lib/sms')
+var phoneLib=require('.././lib/sms');
+var tokenLib=require('.././lib/auth')
 var fs = require('fs');
 const Sequelize = require('sequelize');
 
@@ -174,10 +175,21 @@ module.exports = {
 
     verifyOtp:function(req,res){
         if(req.body['mobileNumber'] && req.body['otp']){
-            req.body['role_id']=1;
-            
-            userHelper.findOne(req.body).then(function(user){
-                    console.log(user);return
+            let data={}
+            data['phone_number']=req.body['mobileNumber'];
+            data['role_id']=req.body['role_id'];
+            data['otp']=req.body['otp'];
+           
+            userHelper.findOne(data).then(function(user){
+                    
+                    if(user){
+                      
+                        var token=tokenLib.createJWToken({id:user['uid']});
+                        return res.status(200).json({code:200,message:"Otp verified successfully",token:token})
+
+                    }else{
+                        return res.status(200).json({code:401,message:"Otp not matched"})
+                    }
             })
         }
     },
