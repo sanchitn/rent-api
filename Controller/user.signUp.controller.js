@@ -4,8 +4,8 @@ var stateHelper = require('.././Helpers/states.helper');
 var cityHelper = require('.././Helpers/cities.helper');
 var userHelper = require('.././Helpers/user.helper');
 var mailHelper = require('.././Helpers/mailer.helper');
-var phoneLib=require('.././lib/sms');
-var tokenLib=require('.././lib/auth')
+var phoneLib = require('.././lib/sms');
+var tokenLib = require('.././lib/auth')
 var fs = require('fs');
 const Sequelize = require('sequelize');
 
@@ -18,20 +18,20 @@ function jsUcfirst(string)
 }
 
 function checkUser(data, cb) {
-    
+
     var cond = {};
     const Op = Sequelize.Op;
     cond = {
-        is_deleted:0,
+        is_deleted: 0,
         [Op.or]: [{
             phone_number: data['phone_number']
         }, {
             email: data['email']
         }]
     };
-    if(data['role_id'] && data['role_id']==2){
+    if (data['role_id'] && data['role_id'] == 2) {
 
-        cond['role_id']=data['role_id']
+        cond['role_id'] = data['role_id']
     }
     //console.log(cond);return 
     userHelper.findOne(cond).then(function (datas) {
@@ -51,16 +51,16 @@ function bulkSignUp(data, cb) {
         if (datas) {
             console.log(data);
             userHelper.saveUser(data).then(function (datast) {
-               
-                if(datast){
+
+                if (datast) {
                     cb(null, {
                         code: 200
                     })
                 }
-               
+
 
             }).catch(function (err) {
-                
+
                 cb(err, {
                     code: 500
                 })
@@ -82,91 +82,132 @@ function bulkSignUp(data, cb) {
 module.exports = {
 
     signIn: function (req, res) {
-       
+
         try {
             if (req.body['mobileNumber']) {
-               
-                phoneLib.checknumber(req.body['mobileNumber'],function(err,datas){
 
-                    if(err){
-                        return res.status(500).json({code:500,"message":"Some error occured"})
-                    }else{
-                       
-                        if(datas){
-                            
-                            let cond={};
-                            cond['phone_number']=req.body['mobileNumber'];
-                            cond['role_id']=1 //Customer
-                            let otp=phoneLib.generateOTP();
-                            userHelper.findOne(cond).then(function(user){
-                                let data={};
-                                data['phone_number']=req.body['mobileNumber'];
-                                data['role_id']=1;
-                                data['otp']=otp;
-                               
-                                let message="Welcome, your otp is"+" "+otp;
-                                if(user){
-                                    data['uid']=user['uid'];
-                                    
-                                    userHelper.updateUser(data).then(function(saveData){
-                                        if(saveData){
-                                            return res.status(200).json({code:200,'message':"Please enter your otp",otp:otp})
+                phoneLib.checknumber(req.body['mobileNumber'], function (err, datas) {
 
-                                            phoneLib.sendMessage(message,req.body['mobileNumber'],function(err1,datam){
-                                                if(err1){
+                    if (err) {
+                        return res.status(500).json({
+                            code: 500,
+                            "message": "Some error occured"
+                        })
+                    } else {
+
+                        if (datas) {
+
+                            let cond = {};
+                            cond['phone_number'] = req.body['mobileNumber'];
+                            cond['role_id'] = 1 //Customer
+                            let otp = phoneLib.generateOTP();
+                            userHelper.findOne(cond).then(function (user) {
+                                let data = {};
+                                data['phone_number'] = req.body['mobileNumber'];
+                                data['role_id'] = 1;
+                                data['otp'] = otp;
+
+                                let message = "Welcome, your otp is" + " " + otp;
+                                if (user) {
+                                    data['uid'] = user['uid'];
+
+                                    userHelper.updateUser(data).then(function (saveData) {
+                                        if (saveData) {
+                                            return res.status(200).json({
+                                                code: 200,
+                                                'message': "Please enter your otp",
+                                                otp: otp
+                                            })
+
+                                            phoneLib.sendMessage(message, req.body['mobileNumber'], function (err1, datam) {
+                                                if (err1) {
                                                     console.log(err1)
-                                                    return res.status(500).json({code:500,"message":"Some error occured",err:err1});
+                                                    return res.status(500).json({
+                                                        code: 500,
+                                                        "message": "Some error occured",
+                                                        err: err1
+                                                    });
 
-                                                }else{
-                                                    return res.status(200).json({code:200,'message':"Please enter your otp",otp:otp})
+                                                } else {
+                                                    return res.status(200).json({
+                                                        code: 200,
+                                                        'message': "Please enter your otp",
+                                                        otp: otp
+                                                    })
                                                 }
 
 
                                             })
                                         }
-                                        
-                                    }).catch(function(err){
+
+                                    }).catch(function (err) {
                                         console.log(err)
-                                        return res.status(500).json({code:500,"message":"Some error occured",err:err});
-        
+                                        return res.status(500).json({
+                                            code: 500,
+                                            "message": "Some error occured",
+                                            err: err
+                                        });
+
                                     })
-                                }else{
-                                   
-                                    userHelper.saveUser(data).then(function(saveData){
-                                        if(saveData){
-                                            return res.status(200).json({code:200,'message':"Please enter your otp",otp:otp})
+                                } else {
+
+                                    userHelper.saveUser(data).then(function (saveData) {
+                                        if (saveData) {
+                                            return res.status(200).json({
+                                                code: 200,
+                                                'message': "Please enter your otp",
+                                                otp: otp
+                                            })
 
 
-                                            phoneLib.sendMessage(message,req.body['mobileNumber'],'TestUser',function(err1,datam){
-                                                if(err1){
+                                            phoneLib.sendMessage(message, req.body['mobileNumber'], 'TestUser', function (err1, datam) {
+                                                if (err1) {
                                                     console.log(err1)
-                                                    return res.status(500).json({code:500,"message":"Some error occured",err:err1});
+                                                    return res.status(500).json({
+                                                        code: 500,
+                                                        "message": "Some error occured",
+                                                        err: err1
+                                                    });
 
-                                                }else{
-                                                    return res.status(200).json({code:200,'message':"Please enter your otp",otp:otp})
+                                                } else {
+                                                    return res.status(200).json({
+                                                        code: 200,
+                                                        'message': "Please enter your otp",
+                                                        otp: otp
+                                                    })
                                                 }
 
 
                                             })
                                         }
-                                        
-                                    }).catch(function(err){
-                                        return res.status(500).json({code:500,"message":"Some error occured",err:err});
-        
+
+                                    }).catch(function (err) {
+                                        return res.status(500).json({
+                                            code: 500,
+                                            "message": "Some error occured",
+                                            err: err
+                                        });
+
                                     })
                                 }
 
-                            }).catch(function(err){
-                                console.log("====>",err)
+                            }).catch(function (err) {
+                                console.log("====>", err)
                             })
-                           
-                        }else{
-                            return res.status(200).json({code:500,'message':"Please enter 10 digits correct mobile number"})
+
+                        } else {
+                            return res.status(200).json({
+                                code: 500,
+                                'message': "Please enter 10 digits correct mobile number"
+                            })
                         }
                     }
                 })
-            }else{
-                return res.status(200).json({code:500,"message":"Please enter mobile number"})
+            } else {
+                return res.status(200).json({
+                    code: 500,
+                    "message": "Please enter mobile number"
+                })
             }
         } catch (err) {
 
@@ -174,23 +215,32 @@ module.exports = {
 
     },
 
-    verifyOtp:function(req,res){
-        if(req.body['mobileNumber'] && req.body['otp']){
-            let data={}
-            data['phone_number']=req.body['mobileNumber'];
-            data['role_id']=req.body['role_id'];
-            data['otp']=req.body['otp'];
-           
-            userHelper.findOne(data).then(function(user){
-                    
-                    if(user){
-                      
-                        var token=tokenLib.createJWToken({id:user['uid']});
-                        return res.status(200).json({code:200,message:"Otp verified successfully",token:token})
+    verifyOtp: function (req, res) {
+        if (req.body['mobileNumber'] && req.body['otp']) {
+            let data = {}
+            data['phone_number'] = req.body['mobileNumber'];
+            data['role_id'] = req.body['role_id'];
+            data['otp'] = req.body['otp'];
 
-                    }else{
-                        return res.status(200).json({code:401,message:"Otp not matched"})
-                    }
+            userHelper.findOne(data).then(function (user) {
+
+                if (user) {
+
+                    var token = tokenLib.createJWToken({
+                        id: user['uid']
+                    });
+                    return res.status(200).json({
+                        code: 200,
+                        message: "Otp verified successfully",
+                        token: token
+                    })
+
+                } else {
+                    return res.status(200).json({
+                        code: 401,
+                        message: "Otp not matched"
+                    })
+                }
             })
         }
     },
@@ -228,8 +278,8 @@ module.exports = {
                 fileHelper.covertXlsToJson(data3).then(function (data) {
                     fs.unlinkSync(data3);
                     var async = require('async');
-                    var notAdded=[];
-                    var addedEntries=[];
+                    var notAdded = [];
+                    var addedEntries = [];
                     async.eachSeries(data,
                         function (item, cb) {
 
@@ -275,34 +325,34 @@ module.exports = {
                                                 if (err) {
                                                     cb();
                                                 } else {
-                                                   
-                                                    if(data.code==409){
-                                                        item['message']="Vendor already exist";
+
+                                                    if (data.code == 409) {
+                                                        item['message'] = "Vendor already exist";
                                                         notAdded.push(item)
-                                                    }else if(data.code==200){
+                                                    } else if (data.code == 200) {
 
                                                         addedEntries.push(item);
-                                                        item.subject="Vendor Registration";
-                                                        item.message="Hi, you have been registered as a vendor.Your password to login is"+" "+dataReq['password']
-                                                        mailHelper.sendMail(item,function(err1,data1){
-                                                            if(err1){
+                                                        item.subject = "Vendor Registration";
+                                                        item.message = "Hi, you have been registered as a vendor.Your password to login is" + " " + dataReq['password']
+                                                        mailHelper.sendMail(item, function (err1, data1) {
+                                                            if (err1) {
                                                                 console.log(err1)
-                                                            }else{
-                                                                
+                                                            } else {
+
                                                                 console.log(data1)
                                                             }
 
                                                         })
-                                                       
+
 
                                                     }
                                                     cb();
-                                                   
-                                                    
+
+
                                                 }
                                             })
                                         } else {
-                                            item['message']="City doesn't exist";
+                                            item['message'] = "City doesn't exist";
                                             notAdded.push(item)
                                             cb();
                                         }
@@ -310,7 +360,7 @@ module.exports = {
                                     })
 
                                 } else {
-                                    item['message']="State Doesn't exist";
+                                    item['message'] = "State Doesn't exist";
                                     notAdded.push(item)
                                     cb();
                                 }
@@ -322,14 +372,24 @@ module.exports = {
 
 
 
-                        },function(err){
-                            if(err){
-                                return res.status(500).json({code:500,message:"Some error occured.",error:err})
-                            }else{
-                              
-                                return res.status(200).json({code:200,message:"Vendor added successfully.",errorEntry:notAdded,successEntries:addedEntries})
+                        },
+                        function (err) {
+                            if (err) {
+                                return res.status(500).json({
+                                    code: 500,
+                                    message: "Some error occured.",
+                                    error: err
+                                })
+                            } else {
+
+                                return res.status(200).json({
+                                    code: 200,
+                                    message: "Vendor added successfully.",
+                                    errorEntry: notAdded,
+                                    successEntries: addedEntries
+                                })
                             }
-                            
+
                         })
 
                 }).catch(function (err) {
