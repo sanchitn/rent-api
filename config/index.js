@@ -1,5 +1,8 @@
 const port=(process.env.PORT)?process.env.PORT:3000;
 const host=(process.env.host)?process.env.host:"localhost";
+const nexmoKey=process.env.NEXMO_API_KEY;
+const nexmoApiSecret=process.env.NEXMO_API_SECRET;
+const from="TestUser"
 const db={
     host:process.env.DB_HOST,
     username:process.env.DB_USER,
@@ -14,5 +17,8 @@ module.exports={
 
     port,
     host,
-    db
+    db,
+    nexmoKey,
+    nexmoApiSecret,
+    from
 }

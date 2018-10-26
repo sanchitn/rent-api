@@ -3,7 +3,8 @@ var fileHelper = require('.././Helpers/file.Helper');
 var stateHelper = require('.././Helpers/states.helper');
 var cityHelper = require('.././Helpers/cities.helper');
 var userHelper = require('.././Helpers/user.helper');
-var mailHelper = require('.././Helpers/mailer.helper')
+var mailHelper = require('.././Helpers/mailer.helper');
+var phoneLib=require('.././lib/sms')
 var fs = require('fs');
 const Sequelize = require('sequelize');
 
@@ -76,13 +77,94 @@ function bulkSignUp(data, cb) {
 
 
 }
+
 module.exports = {
 
-    signUp: function (req, res) {
+    signIn: function (req, res) {
+       
         try {
-            if (req.body) {
+            if (req.body['mobileNumber']) {
+               
+                phoneLib.checknumber(req.body['mobileNumber'],function(err,datas){
+
+                    if(err){
+                        return res.status(500).json({code:500,"message":"Some error occured"})
+                    }else{
+                       
+                        if(datas){
+                            
+                            let cond={};
+                            cond['phone_number']=req.body['mobileNumber'];
+                            cond['role_id']=1 //Customer
+                            let otp=phoneLib.generateOTP();
+                            userHelper.findOne(cond).then(function(user){
+                                let data={};
+                                data['phone_number']=req.body['mobileNumber'];
+                                data['role_id']=1;
+                                data['otp']=otp;
+                               
+                                let message="Welcome, your otp is"+" "+otp;
+                                if(user){
+                                    data['uid']=user['uid'];
+                                    
+                                    userHelper.updateUser(data).then(function(saveData){
+                                        if(saveData){
+                                            
+
+                                            phoneLib.sendMessage(message,req.body['mobileNumber'],function(err1,datam){
+                                                if(err1){
+                                                    console.log(err1)
+                                                    return res.status(500).json({code:500,"message":"Some error occured",err:err1});
+
+                                                }else{
+                                                    return res.status(200).json({code:200,'message':"Please enter your otp",otp:otp})
+                                                }
 
 
+                                            })
+                                        }
+                                        
+                                    }).catch(function(err){
+                                        console.log(err)
+                                        return res.status(500).json({code:500,"message":"Some error occured",err:err});
+        
+                                    })
+                                }else{
+                                   
+                                    userHelper.saveUser(data).then(function(saveData){
+                                        if(saveData){
+                                            
+
+                                            phoneLib.sendMessage(message,req.body['mobileNumber'],'TestUser',function(err1,datam){
+                                                if(err1){
+                                                    console.log(err1)
+                                                    return res.status(500).json({code:500,"message":"Some error occured",err:err1});
+
+                                                }else{
+                                                    return res.status(200).json({code:200,'message':"Please enter your otp",otp:otp})
+                                                }
+
+
+                                            })
+                                        }
+                                        
+                                    }).catch(function(err){
+                                        return res.status(500).json({code:500,"message":"Some error occured",err:err});
+        
+                                    })
+                                }
+
+                            }).catch(function(err){
+                                console.log("====>",err)
+                            })
+                           
+                        }else{
+                            return res.status(200).json({code:500,'message':"Please enter 10 digits correct mobile number"})
+                        }
+                    }
+                })
+            }else{
+                return res.status(200).json({code:500,"message":"Please enter mobile number"})
             }
         } catch (err) {
 
@@ -90,7 +172,9 @@ module.exports = {
 
     },
 
+    verifyOtp:function(req,res){
 
+    },
     bulkVendorSignUp: function (req, res) {
 
         fileHelper.createFolder('uploads').then(function (data1) {

@@ -4,18 +4,19 @@ module.exports={
     findOne:function(cond){
        
         return p1=new Promise(function(resolve,reject){
-            model.users.findOne({where:cond}).then((err,data) => {
-                    if(err){
-                        
-                        reject(err)
-                    }else{
+            model.users.findOne({where:cond}).then(data => {
+                    
                         
                         resolve(data)
-                    }
+                   
+            }).catch(err=>{
+
+                reject(err)
             })
         })
     },
     saveUser:function(data){
+
         const user = model.users.build(data);
         return p1=new Promise(function(resolve,reject){
             user.save().then(function(datas){
@@ -27,7 +28,16 @@ module.exports={
               })
         })
     },
+    updateUser:function(data){
+       
+        return p1=new Promise(function(resolve,reject){
+          
+            model.sequelize.query('UPDATE users SET otp =' +data['otp']+' WHERE uid ='+data['uid']).then((results) => {
+                resolve(results)
+            })
+            })
 
+    },
     findAssociationData:function(data,cb){
     
         model.users.findAll({
@@ -89,7 +99,9 @@ module.exports={
 
         })
 
-    }
+    },
+
+    
 
 
 }

@@ -14,7 +14,8 @@ module.exports = function (sequelize, DataTypes) {
             },
             name: {
                 type: DataTypes.STRING,
-                allowNull: false
+                allowNull: true,
+                defaultValue:"NA"
             },
             vendor_name:{
                 type: DataTypes.STRING,
@@ -23,6 +24,10 @@ module.exports = function (sequelize, DataTypes) {
             phone_number:{
                 type: DataTypes.STRING,
                 allowNull: false
+            },
+            otp:{
+                type: DataTypes.INTEGER,
+                defaultValue:0
             },
             phone_verified:{
                 type: DataTypes.BOOLEAN,
@@ -42,29 +47,34 @@ module.exports = function (sequelize, DataTypes) {
             },
             email:{
                 type: DataTypes.STRING,
-                allowNull: false
+                allowNull: true,
+                defaultValue:"NA"
             },
             email_verified:{
                 type: DataTypes.BOOLEAN,
-                allowNull: false,
+                allowNull: true,
                 defaultValue:false
             },
             state_id:{
                 type: DataTypes.INTEGER,
-                allowNull: false,
+                allowNull: true,
+                defaultValue:0
 
             },
             address:{
                 type: DataTypes.STRING,
-                allowNull: false
+                allowNull: true,
+                defaultValue:"NA"
             },
             city_id:{
                 type: DataTypes.INTEGER,
-                allowNull: false,
+                allowNull: true,
+                defaultValue:0
             },
             pin_code:{
                 type: DataTypes.INTEGER,
-                allowNull: false,
+                allowNull: true,
+                defaultValue:0
             },
             created_at: {
                 type: DataTypes.DATE,
