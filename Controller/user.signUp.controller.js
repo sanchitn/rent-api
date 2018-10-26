@@ -173,7 +173,13 @@ module.exports = {
     },
 
     verifyOtp:function(req,res){
-
+        if(req.body['mobileNumber'] && req.body['otp']){
+            req.body['role_id']=1;
+            
+            userHelper.findOne(req.body).then(function(user){
+                    console.log(user);return
+            })
+        }
     },
     bulkVendorSignUp: function (req, res) {
 
