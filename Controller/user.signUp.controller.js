@@ -110,7 +110,7 @@ module.exports = {
                                     
                                     userHelper.updateUser(data).then(function(saveData){
                                         if(saveData){
-                                            
+                                            return res.status(200).json({code:200,'message':"Please enter your otp",otp:otp})
 
                                             phoneLib.sendMessage(message,req.body['mobileNumber'],function(err1,datam){
                                                 if(err1){
@@ -134,7 +134,8 @@ module.exports = {
                                    
                                     userHelper.saveUser(data).then(function(saveData){
                                         if(saveData){
-                                            
+                                            return res.status(200).json({code:200,'message':"Please enter your otp",otp:otp})
+
 
                                             phoneLib.sendMessage(message,req.body['mobileNumber'],'TestUser',function(err1,datam){
                                                 if(err1){
