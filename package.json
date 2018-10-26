@@ -9,6 +9,7 @@
     "async": "^2.6.1",
     "bcrypt": "^3.0.2",
     "cookie-parser": "~1.4.3",
+    "cors": "^2.8.4",
     "debug": "~2.6.9",
     "dotenv": "^6.0.0",
     "excel2json": "^0.3.1",
