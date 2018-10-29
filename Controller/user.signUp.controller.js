@@ -82,7 +82,7 @@ function bulkSignUp(data, cb) {
 module.exports = {
 
     signIn: function (req, res) {
-
+       
         try {
             if (req.body['mobileNumber']) {
 
@@ -110,6 +110,7 @@ module.exports = {
                                 let message = "Welcome, your otp is" + " " + otp;
                                 if (user) {
                                     data['uid'] = user['uid'];
+                                    
 
                                     userHelper.updateUser(data).then(function (saveData) {
                                         if (saveData) {
@@ -225,9 +226,10 @@ module.exports = {
             userHelper.findOne(data).then(function (user) {
 
                 if (user) {
-
+                    
                     var token = tokenLib.createJWToken({
-                        id: user['uid']
+                        id: user['uid'],
+                        roleId:req.body['role_id']
                     });
                     return res.status(200).json({
                         code: 200,
