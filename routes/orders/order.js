@@ -6,5 +6,6 @@ module.exports = function (router) {
    
     
   router.post('/createOrder',orderController.createOrder);
+  router.get('/findOrderDetails',orderController.findOrderDetails)
 
 }

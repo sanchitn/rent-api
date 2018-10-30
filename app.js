@@ -26,7 +26,7 @@ app.use(express.static(path.join(__dirname, 'uploads')));
 var whitelist = ['http://192.168.0.152:4200','http://localhost:4200',"http://192.168.0.140:8083","http://192.168.0.148:8282","http://localhost:3005","chrome-extension://fhbjgbiflinjbdggehcddcbncdddomop"]
  var corsOptions = {
     origin: function (origin, callback) {
-      console.log("====>",origin);
+     
       if (whitelist.indexOf(origin) !== -1 || !origin) {
         console.log("Success")
        
@@ -43,17 +43,19 @@ app.use(function(req,res,next){
 
   var preventiveUrl=['/createOrder'];
   var index=preventiveUrl.indexOf(req.url);
+  console.log(index)
   if(index>-1){
     var token =(req.headers['token'])?req.headers['token']:"";
-  
+   
     if(token!=""){
+     
       authToken.verifyJWTToken(token).then(function(data){
-      
+       
         req.uid=data['id'];
         req.roleId=data['roleId'];
         next();
       }).catch(function(err){
-        next();
+        return res.status(401).json({code:401,message:"User not authorized"})
   
       })
     }else{

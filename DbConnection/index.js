@@ -43,6 +43,10 @@ db.users.hasMany(db.items, {foreignKey: 'vendor_id'});
 db.users.belongsTo(db.cities, {foreignKey: 'city_id'});
 db.users.belongsTo(db.states, {foreignKey: 'state_id'});
 db.items.hasOne(db.inventories, {foreignKey: 'item_id'});
+db.orders.belongsTo(db.users, {foreignKey: 'user_id',as: 'userId'});
+db.orders.belongsTo(db.users, {foreignKey: 'vendor_id',as: 'vendorId'});
+db.orders.hasMany(db.orderInformation, {foreignKey: 'order_id'});
+db.orderInformation.belongsTo(db.items, {foreignKey: 'item_id'});
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 module.exports = db
