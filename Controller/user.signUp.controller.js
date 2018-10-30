@@ -233,6 +233,7 @@ module.exports = {
                     });
                     return res.status(200).json({
                         code: 200,
+                        data:{userId:user['uid']},
                         message: "Otp verified successfully",
                         token: token
                     })
