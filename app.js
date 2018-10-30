@@ -43,10 +43,9 @@ app.use(function(req,res,next){
 
   var preventiveUrl=['/createOrder'];
   var index=preventiveUrl.indexOf(req.url);
-  console.log(index)
   if(index>-1){
     var token =(req.headers['token'])?req.headers['token']:"";
-   
+    
     if(token!=""){
      
       authToken.verifyJWTToken(token).then(function(data){
