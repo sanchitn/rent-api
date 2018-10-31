@@ -43,4 +43,16 @@ function allowCrossDomain(req, res, next) {
     }
   };
 
-module.exports={middleware,checkToken,allowCrossDomain}
+
+  function checkAdminAccess(req,res,next){
+
+    
+    if(req['roleId']==3){
+        next();
+    }else{
+        return res.status(401).json({code:401,message:"UnAuthorized Access"})
+    }
+
+  }
+
+module.exports={middleware,checkToken,allowCrossDomain,checkAdminAccess}

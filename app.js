@@ -39,13 +39,13 @@ var whitelist = ['http://192.168.0.152:4200','http://localhost:4200',"http://192
   }
 app.use(cors(corsOptions));
 app.use(function(req,res,next){
-  var preventiveUrl=['/createOrder'];
+  var preventiveUrl=['/createOrder','/bulkVendorSignUp','/addItems','/findOrderDetails'];
   var index=preventiveUrl.indexOf(req.url);
   if(index>-1){
 
     var token =(req.headers['authorization'])?req.headers['authorization']:"";
     
-console.log(req.headers);
+
     if(token!=""){
      
       authToken.verifyJWTToken(token).then(function(data){
