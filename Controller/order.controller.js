@@ -110,13 +110,17 @@ module.exports = {
     },
     findOrderDetails: function (req, res) {
         let data={};
-        if(req.query){
+        if(req.query[vendorId]){
             
-            data['vendor_id']=req.query['vendorId']
+            data['vendor_id']=req.query['vendorId'];
         }
-       
+        if(req.query[status]){
+            
+            data['status']=req.query['status'];
+        }
+        
         orderHelper.findOrderDetails(data,function(err,data){
-            console.log(data)
+            
 
                 return res.status(200).json({data:data})
         })
