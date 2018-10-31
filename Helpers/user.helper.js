@@ -5,9 +5,10 @@ module.exports={
        
         return p1=new Promise(function(resolve,reject){
             model.users.findOne({where:cond}).then(data => {
-                    
-                        
-                resolve(data)
+                resolve(data)   
+                
+                  
+               
                    
             }).catch(err=>{
 
@@ -100,6 +101,16 @@ module.exports={
         })
 
     },
+
+    validatePassword:function(datas,password,cb){
+      
+        datas.validPassword(password).then(function(datas){
+            
+            cb(null,datas)
+        }).catch(function(err){
+            cb(err,null)
+        })
+    }
 
     
 

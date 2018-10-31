@@ -5,6 +5,8 @@ module.exports = function (router) {
     router.post('/signIn',userSignUpController.signIn);
     router.post('/verifyOtp',userSignUpController.verifyOtp);
     router.post('/bulkVendorSignUp',userSignUpController.bulkVendorSignUp);
+    router.post('/adminSignUp',userSignUpController.adminSignUp);
+    router.post('/adminLogin',userSignUpController.adminLogin);
     
 
 }

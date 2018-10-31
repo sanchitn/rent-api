@@ -19,14 +19,14 @@ module.exports = function (sequelize, DataTypes) {
             is_active: {
                 type: DataTypes.BOOLEAN,
                 defaultValue: true
-            },
-            updated_at:{
-                type: DataTypes.DATE
-            },
-            created_at: {
-                type: DataTypes.DATE,
-                defaultValue: DataTypes.NOW
             }
+            // updated_at:{
+            //     type: DataTypes.DATE
+            // },
+            // created_at: {
+            //     type: DataTypes.DATE,
+            //     defaultValue: DataTypes.NOW
+            // }
 
         }
     );

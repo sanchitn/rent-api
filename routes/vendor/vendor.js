@@ -5,7 +5,7 @@ module.exports = function (router) {
   
     router.get('/getVendorDetail',vendorController.getVendorDetails);
     router.get('/getItemDetails',vendorController.getItemDetails);
-    
+    router.post('/addItems',vendorController.addItems)
   
 
 }

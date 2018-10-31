@@ -55,35 +55,24 @@ module.exports = function (sequelize, DataTypes) {
                 allowNull: true,
                 defaultValue:false
             },
-            state_id:{
-                type: DataTypes.INTEGER,
-                allowNull: true,
-                defaultValue:0
-
-            },
             address:{
                 type: DataTypes.STRING,
                 allowNull: true,
                 defaultValue:"NA"
             },
-            city_id:{
-                type: DataTypes.INTEGER,
-                allowNull: true,
-                defaultValue:0
-            },
             pin_code:{
                 type: DataTypes.INTEGER,
                 allowNull: true,
                 defaultValue:0
-            },
-            created_at: {
-                type: DataTypes.DATE,
-                defaultValue: DataTypes.NOW
-            },
-            updated_at: {
-                type: DataTypes.DATE,
-                defaultValue: DataTypes.NOW
             }
+            // created_at: {
+            //     type: DataTypes.DATE,
+            //     defaultValue: DataTypes.NOW
+            // },
+            // updated_at: {
+            //     type: DataTypes.DATE,
+            //     defaultValue: DataTypes.NOW
+            // }
         },
         {
             hooks : {
@@ -94,9 +83,13 @@ module.exports = function (sequelize, DataTypes) {
                 }
             }
         }
+    
     )
     
-    
+    Users.prototype.validPassword=function(password){
+        
+        return bcrypt.compare(password, this.password);
+    }
    
     return Users;
 }

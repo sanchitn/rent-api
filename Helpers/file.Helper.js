@@ -25,28 +25,26 @@ module.exports={
 
     processFile:function(data,folderName){
         var form = new formidable.IncomingForm();
-        
+      
         //var exceltojson = require("xls-to-json-lc");
         form.parse(data);
         return p1=new Promise(function(resolve,reject){
 
-            form.on('fileBegin', function (name, file){
-        
+            form.on('fileBegin', function (name, file,fields){
+                
                 file.path = __dirname + "/../"+folderName+"/"+ file.name;
               
-            });
-            form.on('file', function (name, file){
+            }).on('file', function (name, file){
                 var filePath=path.join(__dirname,'.././'+folderName+'/'+file.name);
                 resolve(filePath);
                 return 
-               
-               
                 
+            }).on('field', function(name, field) {
+                data.body[name]=field
                
-                
-               
-               
-            });
+            })
+            
+            
         })
     },
 
@@ -60,6 +58,7 @@ module.exports={
                 output: null
             }, function(err, result) {
                 if(err) {
+                    console.log(err);return 
                     reject(err)
                 } else {
                     resolve(result)

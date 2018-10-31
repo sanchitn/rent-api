@@ -430,6 +430,57 @@ module.exports = {
 
 
 
+    },
+    adminSignUp:function(req,res){
+
+        
+        req.body['role_id']=3;
+        req.body['phone_number']=""; 
+        userHelper.saveUser(req.body).then(function(data){
+
+            res.status(200).json({code:200,messgae:"Admin added successfully"})
+        }).catch(function(err){
+
+            return res.status(500).json({code:500,'message':"Internal Server error occured",err:err})
+        })
+
+    },
+    adminLogin:function(req,res){
+        
+        userHelper.findOne({email:req.body['email'],role_id:3}).then(function(data){
+            if(data){
+                
+                userHelper.validatePassword(data,req.body['password'],function(err,datam){
+
+                        if(err){
+                           return res.status(500).json({code:500,message:"Internal Server error occured"})
+                        }else{
+                           if(datam){
+                            var token = tokenLib.createJWToken({
+                                id: data['uid'],
+                                roleId:data['role_id']
+                            });
+                            return res.status(200).json({
+                                code: 200,
+                                //data:{userId:data['uid']},
+                                message: "You have been logged in successfully",
+                                token: token
+                            })
+                           }else{
+                            return res.status(401).json({code:401,message:"Please enter valid credentails"})
+                           }
+                        }
+                })
+            }else{
+                return res.status(401).json({code:401,message:"Please enter valid credentails"})
+            }
+            
+        }).catch(function(err){
+
+            return res.status(500).json({code:500,message:"Internal Server error occured"})
+        })
+       
     }
+
 
 }

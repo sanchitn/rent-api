@@ -17,10 +17,8 @@ module.exports = function (sequelize, DataTypes) {
                 type: DataTypes.BOOLEAN,
                 defaultValue: true
             },
-
-            created_at: {
-                type: DataTypes.DATE,
-                defaultValue: DataTypes.NOW
+            country_id:{
+                type:DataTypes.INTEGER
             }
 
         }
