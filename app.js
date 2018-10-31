@@ -42,9 +42,10 @@ app.use(function(req,res,next){
   var preventiveUrl=['/createOrder'];
   var index=preventiveUrl.indexOf(req.url);
   if(index>-1){
-    
+
     var token =(req.headers['authorization'])?req.headers['authorization']:"";
     
+console.log(req.headers);
     if(token!=""){
      
       authToken.verifyJWTToken(token).then(function(data){
