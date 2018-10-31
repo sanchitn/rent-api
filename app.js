@@ -39,7 +39,7 @@ var whitelist = ['http://192.168.0.152:4200','http://localhost:4200',"http://192
   }
 app.use(cors(corsOptions));
 app.use(function(req,res,next){
-  var preventiveUrl=['/createOrder','/bulkVendorSignUp','/addItems','/findOrderDetails'];
+  var preventiveUrl=['/createOrder','/bulkVendorSignUp','/addItems','/findOrderDetails','/getVendors'];
   var index=preventiveUrl.indexOf(req.url);
   if(index>-1){
 

@@ -217,5 +217,21 @@ module.exports = {
             })
         }
 
+    },
+
+    getVendors:function(req,res){
+        var cond={};
+        cond['role_id']=2;
+        cond['is_deleted']=0;
+
+        var attributes=['uid','vendor_name'];
+
+        userHelper.findAll(cond,attributes).then(function(data){
+
+            return res.status(200).json({code:200,data:data})
+        }).catch(function(err){
+            return res.status(500).json({code:500,message:"Internal Server error occured",err:err})
+
+        })
     }
 }

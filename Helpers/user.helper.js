@@ -16,6 +16,22 @@ module.exports={
             })
         })
     },
+
+    findAll:function(cond,field){
+     
+        return p1=new Promise(function(resolve,reject){
+            model.users.findAll({where:cond,attributes:field}).then(data => {
+                resolve(data)   
+                
+                  
+               
+                   
+            }).catch(err=>{
+
+                reject(err)
+            })
+        })
+    },
     saveUser:function(data){
 
         const user = model.users.build(data);
