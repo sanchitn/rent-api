@@ -16,7 +16,7 @@ module.exports = {
         Method:get
     */
     createOrder: function (req, res) {
-      
+      console.log("Hi")
         if(req.body.items && req.body.items.length>0){
             let userId=req.uid;
             
